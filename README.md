@@ -1,8 +1,8 @@
 # Redis-Scheduler-Service
 This project is a Redis-powered API designed to schedule and execute time-based messages efficiently. 
 The system uses a Flask-based REST API and Redis as a persistent storage layer. It includes functionality for scheduling messages, ensuring fault tolerance, and handling multi-server environments with lock mechanisms to prevent message duplication. 
-Key features include:
 
+Key features include:
 1. Message Scheduling:
 Users can schedule messages to be processed at specific future times via a RESTful POST endpoint.
 Messages are stored in a Redis Sorted Set, with the execution time as the score.
@@ -17,8 +17,7 @@ Implements Redis-based locking (SETNX) to prevent multiple servers from processi
 Exposes endpoints for scheduling (POST /echoAtTime) and health checking (GET /health).
 
 
-How It Works
-
+How It Works:
 1. Scheduling Messages:
 Messages are submitted via the POST /echoAtTime endpoint, specifying a future execution time.
 The scheduler stores these messages in a Redis Sorted Set (scheduled_messages), with the execution time as the score.
