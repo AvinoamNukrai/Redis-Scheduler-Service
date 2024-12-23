@@ -1,4 +1,3 @@
-Redis-Scheduler-Service
 This project is a Redis-powered API designed to schedule and execute time-based messages efficiently. The system uses a Flask-based REST API and Redis as a persistent storage layer. It includes functionality for scheduling messages, ensuring fault tolerance, and handling multi-server environments with lock mechanisms to prevent message duplication.
 
 Key features include:
