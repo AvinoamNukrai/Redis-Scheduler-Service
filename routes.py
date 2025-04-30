@@ -10,8 +10,8 @@ redis_storage = RedisStorage(ma_redis_client)  # our redis storage object
 @echo_at_time_bp.route('', methods=['POST'])
 def echo_at_time():
     """
-    This function responsible for scheduling a msg to be printed at some specified time in the future.
-    We do this by using Redis sorted set that will store all the coming messages (for future restoring).
+    This function is responsible for scheduling a message to be printed at some specified time in the future.
+    We do this by using a Redis sorted set that will store all the coming messages (for future restoring).
     :return: Json file and Key
     """
     data = request.get_json()  # parsing the req data
@@ -22,8 +22,22 @@ def echo_at_time():
         curr_time = int(time.time())
         if input_time <= curr_time:  # this is an unwanted situation, the req time is not in the future!
             return jsonify({"status": "error", "message": "'Time' is invalid, must be in the future!"}), 400
-        # store messages in sorted set by score = input_time, value = input_msg
+        
+        # Log the image path
+        print(f"Received request to schedule: {input_msg}")
+        
+        # Assuming the message format should be "content_path|is_story"
+        # For example, "path/to/image.jpg|story" or "path/to/image.jpg|post"
+        # Here, we assume the message itself contains this information
         redis_storage.store_msg(input_msg, input_time)
+        print(f"Message scheduled: {input_msg} at {input_time}")
+
+        # Verify message storage
+        stored_messages = redis_storage.range_fetch_msgs(int(time.time()) + 1000000)
+        print("Messages currently in Redis after scheduling:")
+        for msg in stored_messages:
+            print(msg.decode('utf-8'))
+
         return jsonify({"status": "success", "message": "message scheduled"}), 200  # success key
     except Exception as e:  # some exception
         return jsonify({"status": "error", "message": f"failed to execute request due to: {e}"}), 500
